@@ -66,7 +66,7 @@ void man(char *name)
 	if(strcmp(name,"create") == 0)
 	{
 		printf("Description : Used to create new regular file\n");
-		printf("Usage : create File_name Permissio\n");
+		printf("Usage : create File_name Permission\n");
 	}
 	else if(strcmp(name,"read") == 0)
 	{
@@ -227,7 +227,7 @@ void InitialiseSuperBlock()
 	SUPERBLOCKobj.TotalInodes = MAXINODE;
 	SUPERBLOCKobj.FreeInode = MAXINODE;
 }
-
+// CreateFile   Demo.txt
 int CreateFile(char *name,int permission)
 {
 	int i = 3;
@@ -266,6 +266,7 @@ int CreateFile(char *name,int permission)
 	UFDTArr[i].ptrfiletable -> writeoffset = 0;
 
 	UFDTArr[i].ptrfiletable -> ptrinode = temp;
+
 	strcpy(UFDTArr[i].ptrfiletable->ptrinode->FileName,name);
 	UFDTArr[i].ptrfiletable->ptrinode->FileType = REGULAR;
 	UFDTArr[i].ptrfiletable->ptrinode->ReferenceCount = 1;
@@ -333,7 +334,7 @@ int ReadFile(int fd,char *arr,int isize)
 
 }
 
-111
+
 int WriteFile(int fd,char *arr,int isize)
 {
 	if(((UFDTArr[fd].ptrfiletable->mode) != WRITE)&&((UFDTArr[fd].ptrfiletable->mode)!= READ + WRITE))
@@ -487,8 +488,8 @@ int LseekFile(int fd,int size,int from)
 		if(((UFDTArr[fd].ptrfiletable->writeoffset) + size) < 0) 
 			return -1;
 		if(((UFDTArr[fd].ptrfiletable->writeoffset) + size) >(UFDTArr[fd].ptrfiletable->ptrinode->FileActualSize))
-		    (UFDTArr[fd].ptrfiletable->ptrinode->FileActualSize) = (UFDTArr[fd].ptrfiletable->writeoffset) + size;
-		    (UFDTArr[fd].ptrfiletable->writeoffset) = (UFDTArr[fd].ptrfiletable->writeoffset) + size;
+		(UFDTArr[fd].ptrfiletable->ptrinode->FileActualSize) = (UFDTArr[fd].ptrfiletable->writeoffset) + size;
+		(UFDTArr[fd].ptrfiletable->writeoffset) = (UFDTArr[fd].ptrfiletable->writeoffset) + size;
 		}
 	else if(from == START)
 	{
@@ -509,7 +510,7 @@ int LseekFile(int fd,int size,int from)
 	}
 }
 
-void Is_file()
+void ls_file()
 {
 	int i = 0;
 	PINODE temp = head;
@@ -629,13 +630,10 @@ int main()
 		fflush(stdin);
 		strcpy(str,"");
 
-		//Display from here
 		printf("\nMarvellous VFS : >");
 
-		//Input taken
 		fgets(str,80,stdin);// scanf("%[^'\n']s",str)
 
-		// sscanf tokenization if we take ls then it goes in zero.
 		count = sscanf(str,"%s%s%s%s",command[0],command[1],command[2],command[3]);
 
 		if(count == 1)
@@ -670,7 +668,7 @@ int main()
 				printf("\nERROR : Command not ound !!!\n");
 				continue;
 			}
-		} 
+		}
 
 		else if(count == 2)
 		{
@@ -756,7 +754,9 @@ int main()
 		else if(count == 3)
 		{
 			if(strcmp(command[0],"create") == 0)
-			{
+			{	
+				//Create  demo.txt
+				//ret = CreateFile(Demo.txt,3)
 				ret = CreateFile(command[1],atoi(command[2]));
 				if(ret >= 0)
 					printf("File is successfully created with file descriptor : %d\n",ret);
@@ -855,54 +855,6 @@ int main()
 	}
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
